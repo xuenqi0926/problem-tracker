@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>刷题记录 · 题目检索</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxwYXRoIGQ9Ik00IDE4YzktMyAxOC0yIDI4IDN2MzFjLTEwLTUtMTktNi0yOC0zeiIgZmlsbD0iIzliOGJmZiIvPgo8cGF0aCBkPSJNNjAgMThjLTktMy0xOC0yLTI4IDN2MzFjMTAtNSAxOS02IDI4LTN6IiBmaWxsPSIjN2M2Y2YwIi8+CjxwYXRoIGQ9Ik0zMiAyMXYzMSIgc3Ryb2tlPSIjZjJmMGZmIiBzdHJva2Utd2lkdGg9IjIuNSIvPgo8cGF0aCBkPSJNMTEgMjhjNS0xIDEwIDAgMTUgM00xMSAzN2M1LTEgMTAgMCAxNSAzTTM4IDMxYzUtMyAxMC00IDE1LTNNMzggNDBjNS0zIDEwLTQgMTUtMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjJmMGZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuOSIvPgo8cGF0aCBkPSJNNTYgNSBMMzYgMjUiIHN0cm9rZT0iI2ZiYmYyNCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHBhdGggZD0iTTM2IDI1IEwzMCAzMSIgc3Ryb2tlPSIjZjJmMGZmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNMzAgMzEgTDI3IDM0IiBzdHJva2U9IiMxYjIwMzAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==">
+<script>
+// 首屏立即应用主题，避免闪烁（仅界面偏好，与题目数据无关）
+(function(){
+  var mode='dark', id='midnight';
+  try{
+    mode = localStorage.getItem('pt_mode') || 'dark';
+    id = localStorage.getItem('pt_theme_'+mode) || (mode==='dark'?'midnight':'daybreak');
+  }catch(e){}
+  document.documentElement.dataset.mode = mode;
+  document.documentElement.dataset.theme = id;
+})();
+</script>
+<style>
+  /* ===== 成套主题预设：背景 / 面板 / 文字 / 主色 一起切换 ===== */
+  :root{
+    --radius:12px;
+    color-scheme:dark;
+    /* midnight（默认深色） */
+    --bg:#0d1018; --panel:#151926; --panel2:#1b2030; --border:#2a3045;
+    --text:#e7e9f2; --muted:#8b92ab;
+    --accent:#7c6cf0; --accent2:#9b8bff; --accent-rgb:124,108,240; --logo2:#4f46e5;
+    --input-bg:#0f1320; --hover-bg:#232940;
+    --tag-bg:#222840; --tag-border:#303854; --tag-text:#aab2d0;
+    --card-hover:#3f4767; --toast-bg:#232940; --mask:rgba(5,7,12,.75);
+    --danger:#f85149; --ok:#3fb950;
+  }
+  /* Catppuccin Mocha */
+  :root[data-theme="catppuccin-mocha"]{
+    color-scheme:dark;
+    --bg:#1e1e2e; --panel:#181825; --panel2:#313244; --border:#45475a;
+    --text:#cdd6f4; --muted:#a6adc8;
+    --accent:#cba6f7; --accent2:#b4befe; --accent-rgb:203,166,247; --logo2:#89b4fa;
+    --input-bg:#11111b; --hover-bg:#313244;
+    --tag-bg:#313244; --tag-border:#45475a; --tag-text:#bac2de;
+    --card-hover:#585b70; --toast-bg:#313244; --mask:rgba(17,17,27,.78);
+    --danger:#f38ba8; --ok:#a6e3a1;
+  }
+  /* Dracula */
+  :root[data-theme="dracula"]{
+    color-scheme:dark;
+    --bg:#282a36; --panel:#21222c; --panel2:#44475a; --border:#44475a;
+    --text:#f8f8f2; --muted:#a2a6c2;
+    --accent:#bd93f9; --accent2:#ff79c6; --accent-rgb:189,147,249; --logo2:#8be9fd;
+    --input-bg:#21222c; --hover-bg:#44475a;
+    --tag-bg:#44475a; --tag-border:#6272a4; --tag-text:#f1f2f8;
+    --card-hover:#6272a4; --toast-bg:#44475a; --mask:rgba(10,10,15,.78);
+    --danger:#ff5555; --ok:#50fa7b;
+  }
+  /* Nord */
+  :root[data-theme="nord"]{
+    color-scheme:dark;
+    --bg:#2e3440; --panel:#3b4252; --panel2:#434c5e; --border:#4c566a;
+    --text:#eceff4; --muted:#aab6c6;
+    --accent:#88c0d0; --accent2:#81a1c1; --accent-rgb:136,192,208; --logo2:#5e81ac;
+    --input-bg:#2e3440; --hover-bg:#434c5e;
+    --tag-bg:#434c5e; --tag-border:#4c566a; --tag-text:#d8dee9;
+    --card-hover:#5e81ac; --toast-bg:#434c5e; --mask:rgba(30,35,45,.76);
+    --danger:#bf616a; --ok:#a3be8c;
+  }
+  /* Tokyo Night */
+  :root[data-theme="tokyo-night"]{
+    color-scheme:dark;
+    --bg:#1a1b26; --panel:#24283b; --panel2:#292e42; --border:#3b4261;
+    --text:#c0caf5; --muted:#8a91b8;
+    --accent:#7aa2f7; --accent2:#bb9af7; --accent-rgb:122,162,247; --logo2:#7dcfff;
+    --input-bg:#1a1b26; --hover-bg:#292e42;
+    --tag-bg:#292e42; --tag-border:#3b4261; --tag-text:#a9b1d6;
+    --card-hover:#565f89; --toast-bg:#292e42; --mask:rgba(12,14,20,.78);
+    --danger:#f7768e; --ok:#9ece6a;
+  }
+  /* Gruvbox Dark */
+  :root[data-theme="gruvbox-dark"]{
+    color-scheme:dark;
+    --bg:#282828; --panel:#3c3836; --panel2:#504945; --border:#665c54;
+    --text:#ebdbb2; --muted:#a89984;
+    --accent:#fabd2f; --accent2:#fe8019; --accent-rgb:250,189,47; --logo2:#fe8019;
+    --input-bg:#1d2021; --hover-bg:#504945;
+    --tag-bg:#504945; --tag-border:#665c54; --tag-text:#d5c4a1;
+    --card-hover:#7c6f64; --toast-bg:#504945; --mask:rgba(20,20,20,.78);
+    --danger:#fb4934; --ok:#b8bb26;
+  }
+  /* One Dark */
+  :root[data-theme="one-dark"]{
+    color-scheme:dark;
+    --bg:#282c34; --panel:#21252b; --panel2:#3a3f4b; --border:#4b5263;
+    --text:#abb2bf; --muted:#8b93a5;
+    --accent:#61afef; --accent2:#c678dd; --accent-rgb:97,175,239; --logo2:#56b6c2;
+    --input-bg:#21252b; --hover-bg:#3a3f4b;
+    --tag-bg:#3a3f4b; --tag-border:#4b5263; --tag-text:#abb2bf;
+    --card-hover:#5c6370; --toast-bg:#3a3f4b; --mask:rgba(15,17,22,.78);
+    --danger:#e06c75; --ok:#98c379;
+  }
+  /* Rose Pine */
+  :root[data-theme="rose-pine"]{
+    color-scheme:dark;
+    --bg:#191724; --panel:#1f1d2e; --panel2:#26233a; --border:#3f3d56;
+    --text:#e0def4; --muted:#908caa;
+    --accent:#ebbcba; --accent2:#f6c177; --accent-rgb:235,188,186; --logo2:#31748f;
+    --input-bg:#191724; --hover-bg:#26233a;
+    --tag-bg:#26233a; --tag-border:#3f3d56; --tag-text:#c4b8e8;
+    --card-hover:#6e6a86; --toast-bg:#26233a; --mask:rgba(15,13,25,.8);
+    --danger:#eb6f92; --ok:#9ccfd8;
+  }
+  /* daybreak（默认浅色） */
+  :root[data-theme="daybreak"]{
+    color-scheme:light;
+    --bg:#f4f6fb; --panel:#ffffff; --panel2:#f2f4fa; --border:#dde2ef;
+    --text:#1f2436; --muted:#6b7288;
+    --accent:#6c5ce7; --accent2:#7c6cf0; --accent-rgb:108,92,231; --logo2:#4f46e5;
+    --input-bg:#ffffff; --hover-bg:#e9ecf6;
+    --tag-bg:#eceefa; --tag-border:#d9deee; --tag-text:#565f7a;
+    --card-hover:#c9d0e4; --toast-bg:#ffffff; --mask:rgba(24,28,45,.32);
+    --danger:#e5484d; --ok:#2e9b4f;
+  }
+  /* Catppuccin Latte */
+  :root[data-theme="catppuccin-latte"]{
+    color-scheme:light;
+    --bg:#eff1f5; --panel:#fbfcfe; --panel2:#e6e9ef; --border:#ccd0da;
+    --text:#4c4f69; --muted:#6c6f85;
+    --accent:#8839ef; --accent2:#1e66f5; --accent-rgb:136,57,239; --logo2:#1e66f5;
+    --input-bg:#ffffff; --hover-bg:#e6e9ef;
+    --tag-bg:#e6e9ef; --tag-border:#ccd0da; --tag-text:#5c5f77;
+    --card-hover:#acb0be; --toast-bg:#ffffff; --mask:rgba(76,79,105,.25);
+    --danger:#d20f39; --ok:#40a02b;
+  }
+  /* Gruvbox Light */
+  :root[data-theme="gruvbox-light"]{
+    color-scheme:light;
+    --bg:#fbf1c7; --panel:#f7eccc; --panel2:#ebdbb2; --border:#d5c4a1;
+    --text:#3c3836; --muted:#7c6f64;
+    --accent:#d65d0e; --accent2:#b57614; --accent-rgb:214,93,14; --logo2:#9d0006;
+    --input-bg:#fffaf0; --hover-bg:#ebdbb2;
+    --tag-bg:#ebdbb2; --tag-border:#d5c4a1; --tag-text:#504945;
+    --card-hover:#a89984; --toast-bg:#fffaf0; --mask:rgba(60,56,54,.3);
+    --danger:#9d0006; --ok:#79740e;
+  }
+  /* Solarized Light */
+  :root[data-theme="solarized-light"]{
+    color-scheme:light;
+    --bg:#fdf6e3; --panel:#fffdf7; --panel2:#eee8d5; --border:#d3c6aa;
+    --text:#657b83; --muted:#93a1a1;
+    --accent:#268bd2; --accent2:#2aa198; --accent-rgb:38,139,210; --logo2:#6c71c4;
+    --input-bg:#fffdf7; --hover-bg:#eee8d5;
+    --tag-bg:#eee8d5; --tag-border:#d3c6aa; --tag-text:#586e75;
+    --card-hover:#b58900; --toast-bg:#fffdf7; --mask:rgba(101,123,131,.28);
+    --danger:#dc322f; --ok:#859900;
+  }
+  /* Rose Pine Dawn */
+  :root[data-theme="rose-pine-dawn"]{
+    color-scheme:light;
+    --bg:#faf4ed; --panel:#fffaf3; --panel2:#f2e9e1; --border:#e0d9d0;
+    --text:#575279; --muted:#797593;
+    --accent:#d7827e; --accent2:#b4637a; --accent-rgb:215,130,126; --logo2:#286983;
+    --input-bg:#fffaf3; --hover-bg:#f2e9e1;
+    --tag-bg:#f2e9e1; --tag-border:#e0d9d0; --tag-text:#6f6b85;
+    --card-hover:#9893a5; --toast-bg:#fffaf3; --mask:rgba(87,82,121,.25);
+    --danger:#b4637a; --ok:#286983;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px}
+  button,input,select{font-family:inherit}
+  .app{max-width:1240px;margin:0 auto;padding:24px 20px 60px}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--logo2));color:#fff}
+  .brand h1{margin:0;font-size:21px;letter-spacing:.5px}
+  .brand p{margin:3px 0 0;color:var(--muted);font-size:12px}
+  .top-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+  .btn{border:1px solid var(--border);background:var(--panel2);color:var(--text);
+    padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.15s}
+  .btn:hover{border-color:var(--accent);background:var(--hover-bg)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .btn.primary:hover{background:var(--accent2)}
+  .btn.ghost{background:transparent}
+  .btn.danger:hover{border-color:var(--danger);color:var(--danger)}
+  .btn.full{width:100%}
+  .btn.mini{padding:4px 9px;font-size:12px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  .dbbar{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--border);
+    border-left:3px solid var(--ok);border-radius:8px;padding:9px 14px;margin-bottom:16px;font-size:12px;color:var(--muted)}
+  .dbbar.err{border-left-color:var(--danger);color:var(--danger)}
+  .dbbar .light{width:8px;height:8px;border-radius:50%;background:var(--ok);flex-shrink:0}
+  .dbbar.err .light{background:var(--danger)}
+  .dbbar code{color:var(--accent2);font-family:Consolas,monospace;font-size:11px;word-break:break-all}
+
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:12px 16px;min-width:104px}
+  .stat .num{font-size:22px;font-weight:700}
+  .stat .lab{color:var(--muted);font-size:12px;margin-top:2px}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+  .layout{display:grid;grid-template-columns:250px 1fr;gap:18px;align-items:start}
+  .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;position:sticky;top:20px}
+  .filter-block{margin-bottom:20px}
+  .filter-title{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px}
+  .filter-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .filter-head .filter-title{margin:0}
+  .mode-switch{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .mode-switch button{background:transparent;border:0;color:var(--muted);padding:3px 8px;cursor:pointer;font-size:12px}
+  .mode-switch button.active{background:var(--accent);color:#fff}
+
+  .input,.select{width:100%;background:var(--input-bg);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:9px 10px;font-size:13px;outline:none}
+  .input:focus,.select:focus{border-color:var(--accent)}
+
+  .diff-filter{display:flex;flex-direction:column;gap:3px}
+  .diff-item{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:6px 8px;border-radius:7px;cursor:pointer;font-size:13px}
+  .diff-item:hover{background:var(--panel2)}
+  .diff-item.active{background:rgba(var(--accent-rgb),.18);color:var(--accent2)}
+  .diff-item .cnt{color:var(--muted);font-size:11px}
+
+  .tag-filter{max-height:330px;overflow:auto;display:flex;flex-wrap:wrap;gap:6px;padding-right:2px}
+  .tag-filter::-webkit-scrollbar{width:5px}
+  .tag-filter::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  .tag-chip{border:1px solid var(--border);background:var(--panel2);color:var(--muted);
+    padding:4px 9px;border-radius:99px;cursor:pointer;font-size:12px;transition:.15s}
+  .tag-chip:hover{color:var(--text);border-color:var(--accent)}
+  .tag-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tag-chip .n{opacity:.65;margin-left:3px}
+
+  .main{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;min-height:420px}
+  .list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .result-info{color:var(--muted);font-size:13px}
+  .result-info b{color:var(--text)}
+  .list-toolbar .select{width:150px}
+
+  .list{display:grid;gap:10px}
+  .card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:13px 14px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:.15s}
+  .card:hover{border-color:var(--card-hover);transform:translateY(-1px)}
+  .card-main{min-width:0}
+  .card-title{font-size:15px;font-weight:600;margin-bottom:8px;word-break:break-all}
+  .title-link{color:var(--text);text-decoration:none;border-bottom:1px dashed transparent;transition:.15s}
+  .title-link:hover{color:var(--accent2);border-bottom-color:var(--accent2)}
+  .title-link .ext{font-size:11px;color:var(--accent2);margin-left:4px;opacity:.75}
+  .open-link{text-decoration:none;color:var(--accent2)}
+  .card-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .card-tags .t{background:var(--tag-bg);border:1px solid var(--tag-border);color:var(--tag-text);
+    padding:2px 8px;border-radius:99px;font-size:11px;cursor:pointer}
+  .card-tags .t:hover{border-color:var(--accent);color:var(--accent2)}
+  .badge{display:inline-block;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;
+    color:#0d1018;margin-right:8px;vertical-align:2px}
+  .card-actions{display:flex;gap:6px;flex-shrink:0}
+
+  .empty{text-align:center;padding:70px 20px;color:var(--muted)}
+  .empty .big{font-size:16px;color:var(--text);margin-bottom:8px}
+
+  .modal{position:fixed;inset:0;background:var(--mask);display:none;
+    align-items:center;justify-content:center;padding:20px;z-index:50}
+  .modal.show{display:flex}
+  .modal-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    width:100%;max-width:560px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.5);
+    max-height:90vh;overflow:auto}
+  .modal-box h2{margin:0 0 18px;font-size:18px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}
+  .quick-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;max-height:110px;overflow:auto}
+  .quick-tags .tag-chip{font-size:11px;padding:3px 8px}
+  .selected-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:24px}
+  .sel-tag{background:rgba(var(--accent-rgb),.18);color:var(--accent2);border:1px solid rgba(var(--accent-rgb),.45);
+    padding:3px 8px;border-radius:99px;font-size:12px;cursor:pointer}
+  .sel-tag:hover{background:rgba(var(--accent-rgb),.32)}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:22px}
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--toast-bg);border:1px solid var(--accent);color:var(--text);
+    padding:10px 18px;border-radius:8px;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* 外观设置面板 */
+  .appearance{position:relative}
+  .appearance-panel{position:absolute;right:0;top:calc(100% + 8px);width:270px;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px;
+    box-shadow:0 14px 44px rgba(0,0,0,.35);z-index:30;display:none}
+  .appearance-panel.show{display:block}
+  .app-sec{margin-bottom:16px}
+  .app-sec:last-child{margin-bottom:0}
+  .app-label{font-size:12px;color:var(--muted);margin-bottom:9px}
+  .theme-switch{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .theme-switch button{flex:1;background:transparent;border:0;color:var(--muted);
+    padding:7px 4px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px}
+  .theme-switch button.active{background:var(--accent);color:#fff;font-weight:600}
+  .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .theme-card{border:1px solid var(--border);border-radius:9px;overflow:hidden;cursor:pointer;
+    background:var(--panel2);transition:.15s;text-align:left;padding:0;color:var(--text)}
+  .theme-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .theme-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  .theme-card .swatch{height:26px;display:flex}
+  .theme-card .swatch i{flex:1}
+  .theme-card .tname{font-size:11px;padding:6px 8px;display:block;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+  .theme-card.active .tname{color:var(--accent2);font-weight:600}
+  .app-hint{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:static}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+      </div>
+      <div>
+        <h1>刷题记录</h1>
+        <p>SQLite 数据库驱动 · 记录题名 / 难度 / 标签，按条件秒速检索</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="appearance">
+        <button class="btn ghost" id="appearanceBtn" title="主题与配色">🎨 外观</button>
+        <div class="appearance-panel" id="appearancePanel">
+          <div class="app-sec">
+            <div class="app-label">深浅模式</div>
+            <div class="theme-switch" id="themeSwitch">
+              <button data-mode="dark"><span>🌙</span> 深色</button>
+              <button data-mode="light"><span>☀️</span> 浅色</button>
+            </div>
+          </div>
+          <div class="app-sec">
+            <div class="app-label">主题风格 · <span id="themeCount"></span></div>
+            <div class="theme-grid" id="themeGrid"></div>
+            <div class="app-hint">当前：<span id="curThemeName">午夜蓝</span></div>
+          </div>
+          <div class="app-hint">每套主题含完整背景与配色。偏好仅存本机浏览器，不影响题目数据。</div>
+        </div>
+      </div>
+      <button class="btn ghost" id="exportBtn">导出备份</button>
+      <button class="btn ghost" id="importBtn">导入</button>
+      <button class="btn ghost danger" id="clearBtn">清空</button>
+      <button class="btn primary" id="addBtn">+ 添加题目</button>
+    </div>
+  </header>
+
+  <div class="dbbar" id="dbbar"><span class="light"></span><span id="dbtext">正在连接数据库…</span></div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="filter-block">
+        <div class="filter-title">题目名称</div>
+        <input id="nameSearch" class="input" placeholder="输入关键词…">
+      </div>
+      <div class="filter-block">
+        <div class="filter-title">难度</div>
+        <div id="diffFilter" class="diff-filter"></div>
+      </div>
+      <div class="filter-block">
+        <div class="filter-head">
+          <div class="filter-title">标签</div>
+          <div class="mode-switch">
+            <button data-mode="and" class="active" title="同时包含所有选中标签">且</button>
+            <button data-mode="or" title="包含任一选中标签">或</button>
+          </div>
+        </div>
+        <div id="tagFilter" class="tag-filter"></div>
+      </div>
+      <button class="btn ghost full" id="resetBtn">重置筛选</button>
+    </aside>
+
+    <main class="main">
+      <div class="list-toolbar">
+        <div class="result-info" id="resultInfo"></div>
+        <select id="sortSelect" class="select">
+          <option value="new">最近添加</option>
+          <option value="diffAsc">难度：低 → 高</option>
+          <option value="diffDesc">难度：高 → 低</option>
+          <option value="name">名称 A → Z</option>
+        </select>
+      </div>
+      <div class="list" id="list"></div>
+    </main>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h2 id="modalTitle">添加题目</h2>
+    <div class="field">
+      <label>题目名称</label>
+      <input id="fName" class="input" placeholder="例如：P3372 【模板】线段树 1">
+    </div>
+    <div class="field">
+      <label>难度</label>
+      <select id="fDiff" class="select"></select>
+    </div>
+    <div class="field">
+      <label>题目链接（可选，填写后题名可直接点击跳转）</label>
+      <input id="fUrl" class="input" type="text" placeholder="例如：https://www.luogu.com.cn/problem/P3372">
+    </div>
+    <div class="field">
+      <label>标签（输入后回车，或点击下方的常用标签）</label>
+      <input id="fTagInput" class="input" list="tagList" placeholder="例如：线段树，然后按回车">
+      <datalist id="tagList"></datalist>
+      <div class="quick-tags" id="quickTags"></div>
+      <div class="selected-tags" id="selectedTags"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="cancelBtn">取消</button>
+      <button class="btn primary" id="saveBtn">保存</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<div class="toast" id="toast"></div>
+
+<script>
+// 洛谷当前难度体系（与官方配色一致）
+const DIFFS = [
+  {name:'入门',            color:'#e74c3c'},
+  {name:'普及-',           color:'#ff9800'},
+  {name:'普及',            color:'#ffc107'},
+  {name:'普及+/提高-',      color:'#4caf50'},
+  {name:'提高',            color:'#00bcd4'},
+  {name:'提高+/省选-',      color:'#2196f3'},
+  {name:'省选/NOI-',        color:'#9c27b0'},
+  {name:'NOI/NOI+/CTS',     color:'#283593', text:'#ffffff'}
+];
+const DIFF_ALIAS = {
+  '普及/提高-':'普及', '普及+/提高':'普及+/提高-',
+  '提高+/省选-':'提高+/省选-', 'NOI/CTSC':'NOI/NOI+/CTS', 'CTSC+':'NOI/NOI+/CTS'
+};
+// 洛谷官方 type=2 (Algorithm) 标签，共 262 个，来源 https://www.luogu.com.cn/_lfe/tags
+const COMMON_TAGS = [
+  "语言入门","模拟","字符串","动态规划 DP","搜索","数学",
+  "图论","贪心","计算几何","暴力数据结构","高精度","树形数据结构",
+  "递推","博弈论","莫队","线段树","倍增","线性数据结构",
+  "二分","并查集","点分治","平衡树","堆","树状数组",
+  "递归","树上启发式合并","单调队列","LGV 引理","矩阵树定理","颜色段均摊（珂朵莉树 ODT）",
+  "原根","三分","Kruskal 重构树","多项式","矩阵运算","数论",
+  "离散化","网络流","cdq 分治","后缀自动机 SAM","基础算法","枚举",
+  "分治","排序","信息论","广度优先搜索 BFS","深度优先搜索 DFS","剪枝",
+  "记忆化搜索","启发式搜索","迭代加深搜索","启发式迭代加深搜索 IDA*","Dancing Links","爬山算法 Local search",
+  "模拟退火","随机调整","遗传算法","背包 DP","数位 DP","区间 DP",
+  "动态规划优化","优先队列","矩阵加速","斜率优化","状态合并","树形 DP",
+  "凸完全单调性（wqs 二分）","四边形不等式","图论建模","图遍历","拓扑排序","最短路",
+  "生成树","平面图","最小环","负权环","连通块","2-SAT",
+  "平面图欧拉公式","强连通分量","Tarjan","双连通分量","欧拉回路","差分约束",
+  "仙人掌","二分图","一般图的最大匹配","上下界网络流","最小割","分数规划",
+  "费用流","树的遍历","最近公共祖先 LCA","树的直径","霍夫曼树","可并堆",
+  "树链剖分","动态树 LCT","树论","树套树","可持久化线段树","可持久化",
+  "哈希 hashing","素数判断","最大公约数 gcd","扩展欧几里德算法","不定方程","进制",
+  "群论","置换","Pólya 定理","虚树","中国剩余定理 CRT","莫比乌斯反演",
+  "组合数学","排列组合","前缀和","二项式定理","康托展开","鸽笼原理",
+  "容斥原理","Fibonacci 数列","Catalan 数","Stirling 数","A*  算法","生成函数",
+  "线性规划","概率论","期望","线性代数","矩阵乘法","线性递推",
+  "高斯消元","逆元","线性基","微积分","导数","积分",
+  "定积分","三维计算几何","级数","向量","栈","队列",
+  "分块","ST 表","凸包","叉积","线段相交","半平面交",
+  "扫描线","旋转卡壳","字典树 Trie","AC 自动机","KMP 算法","后缀数组 SA",
+  "后缀树","有限状态自动机","其它技巧","随机化","博弈树","快速傅里叶变换 FFT",
+  "位运算","整体二分","构造","基环树","K-D Tree","Lucas 定理",
+  "轮廓线 DP","快速数论变换 NTT","回文自动机 PAM","快速沃尔什变换 FWT","快速莫比乌斯变换 FMT","Manacher 算法",
+  "差分","双指针 two-pointer","圆方树","顺序结构","分支结构","循环结构",
+  "数组","字符串（入门）","结构体","函数与递归","链表","Dilworth 定理",
+  "Ad-hoc","笛卡尔树","拟阵","Nim 积","根号分治","拉格朗日反演",
+  "模拟费用流","分散层叠","均摊分析","分类讨论","李超线段树","吉司机线段树 segment tree beats",
+  "线段树合并","折半搜索 meet in the middle","动态树分治","单调栈","杨表","类欧几里得算法",
+  "Berlekamp-Massey(BM) 算法","梯度下降法","Prüfer 序列","调和级数","拉格朗日乘数法","近似算法",
+  "欧拉降幂","集合幂级数，子集卷积","拉格朗日插值法","Lyndon 分解","Stern-Brocot 树","DP 套 DP",
+  "动态 DP","线性 DP","SG 函数","线段树分治","离线处理","整除分块",
+  "极角排序","弦图","Dirichlet 卷积","大步小步算法 BSGS","二次剩余","行列式",
+  "Bézout 定理","随机游走 Markov Chain","鞅的停时定理","杜教筛","欧拉函数","决策单调性",
+  "状压 DP","bitset","特征值","组合优化","整数规划","原始对偶",
+  "最大流最小割定理","全局平衡二叉树","哈希表","Z 函数","线性筛法","Floyd 算法",
+  "启发式合并","单位根反演","平面几何","树的重心","保序回归","后缀平衡树",
+  "STL","整体转移","斜率维护技巧 slope trick","反悔贪心","闵可夫斯基和 Minkowski sum","广义串并联图",
+  "二区间合并（猫树分治）","KTT / Kinetic Tournament Tree","亚线性快速求和算法","Hall 定理"
+];
+
+// 成套主题预设：swatch 依次为 [背景, 面板, 主色]，用于卡片预览
+const THEMES = [
+  {id:'midnight',          mode:'dark',  name:'午夜蓝',       sw:['#0d1018','#1b2030','#7c6cf0']},
+  {id:'catppuccin-mocha',  mode:'dark',  name:'猫咖摩卡',     sw:['#1e1e2e','#313244','#cba6f7']},
+  {id:'dracula',           mode:'dark',  name:'德古拉',       sw:['#282a36','#44475a','#bd93f9']},
+  {id:'nord',              mode:'dark',  name:'极光 Nord',    sw:['#2e3440','#434c5e','#88c0d0']},
+  {id:'tokyo-night',       mode:'dark',  name:'东京夜',       sw:['#1a1b26','#292e42','#7aa2f7']},
+  {id:'gruvbox-dark',      mode:'dark',  name:'复古棕',       sw:['#282828','#504945','#fabd2f']},
+  {id:'one-dark',          mode:'dark',  name:'One Dark',     sw:['#282c34','#3a3f4b','#61afef']},
+  {id:'rose-pine',         mode:'dark',  name:'松林玫瑰',     sw:['#191724','#26233a','#ebbcba']},
+  {id:'daybreak',          mode:'light', name:'破晓白',       sw:['#f4f6fb','#f2f4fa','#6c5ce7']},
+  {id:'catppuccin-latte',  mode:'light', name:'猫咖拿铁',     sw:['#eff1f5','#e6e9ef','#8839ef']},
+  {id:'gruvbox-light',     mode:'light', name:'复古米',       sw:['#fbf1c7','#ebdbb2','#d65d0e']},
+  {id:'solarized-light',   mode:'light', name:'太阳光',       sw:['#fdf6e3','#eee8d5','#268bd2']},
+  {id:'rose-pine-dawn',    mode:'light', name:'玫瑰黎明',     sw:['#faf4ed','#f2e9e1','#d7827e']}
+];
+const state = { problems:[], stats:null, query:'', difficulty:'', tags:[], tagMode:'and', sort:'new' };
+let modalTags = new Set();
+let editingId = null;
+let busy = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ---------- API ----------
+async function api(path, opts){
+  const res = await fetch(path, Object.assign({headers:{'Content-Type':'application/json'}}, opts||{}));
+  let j;
+  try{ j = await res.json(); }catch(e){ throw new Error('服务返回异常，请确认后端已启动'); }
+  if(!j.ok) throw new Error(j.error || '请求失败');
+  return j.data;
+}
+
+function setDbError(msg){
+  $('dbbar').classList.add('err');
+  $('dbtext').textContent = msg;
+}
+function setDbOk(stats){
+  $('dbbar').classList.remove('err');
+  const kb = (stats.dbSize/1024).toFixed(1);
+  $('dbtext').innerHTML = `数据库已连接 · <code>${esc(stats.dbPath)}</code> · ${stats.problems} 题 / ${stats.tags} 标签 · ${kb} KB`;
+}
+
+async function load(){
+  try{
+    const [probs, stats] = await Promise.all([api('/api/problems'), api('/api/stats')]);
+    state.problems = probs.map(p=>{
+      let diff = p.difficulty;
+      if(DIFF_ALIAS[diff]) diff = DIFF_ALIAS[diff];
+      return {id:p.id, name:p.name, diff:diff, tags:p.tags||[], created:p.created, url:p.url||''};
+    });
+    state.stats = stats;
+    setDbOk(stats);
+    renderAll();
+  }catch(e){
+    setDbError('数据库连接失败：' + e.message + '。请先双击桌面「刷题记录」启动服务。');
+    $('list').innerHTML = `<div class="empty"><div class="big">无法连接数据库</div>
+      <div>请先双击桌面「刷题记录」启动本地服务，然后刷新本页。</div></div>`;
+  }
+}
+
+// ---------- 外观 ----------
+let curMode = 'dark';
+function renderThemeGrid(){
+  const list = THEMES.filter(t=>t.mode===curMode);
+  $('themeCount').textContent = list.length + ' 款';
+  $('themeGrid').innerHTML = list.map(t=>
+    `<button class="theme-card ${t.id===document.documentElement.dataset.theme?'active':''}" data-id="${t.id}" title="${t.name}">
+       <span class="swatch"><i style="background:${t.sw[0]}"></i><i style="background:${t.sw[1]}"></i><i style="background:${t.sw[2]}"></i></span>
+       <span class="tname">${t.name}</span>
+     </button>`).join('');
+}
+function applyTheme(id){
+  const t = THEMES.find(x=>x.id===id); if(!t) return;
+  document.documentElement.dataset.theme = id;
+  document.documentElement.dataset.mode = t.mode;
+  curMode = t.mode;
+  $('curThemeName').textContent = t.name;
+  document.querySelectorAll('#themeSwitch button').forEach(b=>b.classList.toggle('active', b.dataset.mode===t.mode));
+  document.querySelectorAll('#themeGrid .theme-card').forEach(c=>c.classList.toggle('active', c.dataset.id===id));
+  try{
+    localStorage.setItem('pt_mode', t.mode);
+    localStorage.setItem('pt_theme_'+t.mode, id);
+  }catch(e){}
+}
+function switchMode(mode){
+  if(mode===curMode) return;
+  let id;
+  try{ id = localStorage.getItem('pt_theme_'+mode); }catch(e){}
+  const exists = THEMES.some(t=>t.id===id && t.mode===mode);
+  if(!exists) id = mode==='dark' ? 'midnight' : 'daybreak';
+  curMode = mode;
+  renderThemeGrid();
+  applyTheme(id);
+}
+function initAppearance(){
+  curMode = document.documentElement.dataset.mode || 'dark';
+  const id = document.documentElement.dataset.theme || 'midnight';
+  renderThemeGrid();
+  applyTheme(id);
+
+  $('appearanceBtn').onclick = e=>{ e.stopPropagation(); $('appearancePanel').classList.toggle('show'); };
+  $('appearancePanel').onclick = e=>e.stopPropagation();
+  $('themeSwitch').onclick = e=>{
+    const b = e.target.closest('[data-mode]'); if(!b) return;
+    switchMode(b.dataset.mode);
+  };
+  $('themeGrid').onclick = e=>{
+    const c = e.target.closest('[data-id]'); if(!c) return;
+    applyTheme(c.dataset.id);
+  };
+  document.addEventListener('click', ()=>$('appearancePanel').classList.remove('show'));
+}
+
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function busyOn(on){
+  busy = on;
+  ['addBtn','exportBtn','importBtn','clearBtn','saveBtn'].forEach(id=>{ $(id).disabled = on; });
+}
+
+function initSelects(){
+  $('fDiff').innerHTML = DIFFS.map((d,i)=>`<option value="${i}">${d.name}</option>`).join('');
+  $('tagList').innerHTML = COMMON_TAGS.map(t=>`<option value="${esc(t)}"></option>`).join('');
+}
+
+function renderStats(){
+  const total = state.problems.length;
+  const html = [`<div class="stat"><div class="num">${total}</div><div class="lab">总题数</div></div>`];
+  DIFFS.forEach(d=>{
+    const n = state.problems.filter(p=>p.diff===d.name).length;
+    if(n) html.push(`<div class="stat"><div class="num" style="color:${d.color}">${n}</div>
+      <div class="lab"><span class="dot" style="background:${d.color}"></span>${d.name}</div></div>`);
+  });
+  $('stats').innerHTML = html.join('');
+}
+
+function renderDiffFilter(){
+  const counts = {};
+  state.problems.forEach(p=>counts[p.diff]=(counts[p.diff]||0)+1);
+  $('diffFilter').innerHTML =
+    `<div class="diff-item ${state.difficulty===''?'active':''}" data-diff=""><span>全部难度</span><span class="cnt">${state.problems.length}</span></div>` +
+    DIFFS.filter(d=>counts[d.name]).map(d=>
+      `<div class="diff-item ${state.difficulty===d.name?'active':''}" data-diff="${esc(d.name)}">
+         <span><span class="dot" style="background:${d.color}"></span>${d.name}</span>
+         <span class="cnt">${counts[d.name]}</span>
+       </div>`).join('');
+}
+
+function renderTagFilter(){
+  const counts = {};
+  state.problems.forEach(p=>(p.tags||[]).forEach(t=>counts[t]=(counts[t]||0)+1));
+  const tags = Object.keys(counts).sort((a,b)=>counts[b]-counts[a] || a.localeCompare(b,'zh'));
+  $('tagFilter').innerHTML = tags.length
+    ? tags.map(t=>`<span class="tag-chip ${state.tags.includes(t)?'active':''}" data-tag="${esc(t)}">${esc(t)}<span class="n">${counts[t]}</span></span>`).join('')
+    : '<span style="color:var(--muted);font-size:12px">添加题目后自动出现</span>';
+}
+
+function getFiltered(){
+  const q = state.query.trim().toLowerCase();
+  const list = state.problems.filter(p=>{
+    if(state.difficulty && p.diff !== state.difficulty) return false;
+    if(state.tags.length){
+      const has = t => (p.tags||[]).includes(t);
+      if(state.tagMode==='and' ? !state.tags.every(has) : !state.tags.some(has)) return false;
+    }
+    if(q && !(p.name||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const idx = n => { const i = DIFFS.findIndex(d=>d.name===n); return i<0?99:i; };
+  if(state.sort==='diffAsc')  list.sort((a,b)=>idx(a.diff)-idx(b.diff));
+  if(state.sort==='diffDesc') list.sort((a,b)=>idx(b.diff)-idx(a.diff));
+  if(state.sort==='name')     list.sort((a,b)=>a.name.localeCompare(b.name,'zh'));
+  if(state.sort==='new')      list.sort((a,b)=>(b.created||0)-(a.created||0));
+  return list;
+}
+
+// 题目跳转链接：只使用手动填写的 url
+function linkOf(p){
+  let u = (p.url||'').trim();
+  if(u && !/^https?:\/\//i.test(u)) u = 'https://' + u;
+  return u;
+}
+
+function renderList(){
+  const list = getFiltered();
+  $('resultInfo').innerHTML = `显示 <b>${list.length}</b> / ${state.problems.length} 道题`;
+  if(!list.length){
+    $('list').innerHTML = `<div class="empty">
+      <div class="big">${state.problems.length?'没有符合当前筛选条件的题目':'还没有题目'}</div>
+      <div>${state.problems.length?'试试减少标签或切换「且 / 或」':'点击右上角「+ 添加题目」开始记录'}</div></div>`;
+    return;
+  }
+  $('list').innerHTML = list.map(p=>{
+    const d = DIFFS.find(x=>x.name===p.diff) || {color:'#8b92ab'};
+    const link = linkOf(p);
+    const nameHtml = link
+      ? `<a class="title-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer" title="打开题目网页">${esc(p.name)}<span class="ext">↗</span></a>`
+      : esc(p.name);
+    return `<div class="card">
+      <div class="card-main">
+        <div class="card-title"><span class="badge" style="background:${d.color};color:${d.text||'#0d1018'}">${esc(p.diff)}</span>${nameHtml}</div>
+        <div class="card-tags">${(p.tags||[]).map(t=>`<span class="t" data-tag="${esc(t)}">#${esc(t)}</span>`).join('') || '<span style="color:var(--muted);font-size:11px">无标签</span>'}</div>
+      </div>
+      <div class="card-actions">
+        ${link ? `<a class="btn mini ghost open-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer" title="打开题目网页">打开</a>` : ''}
+        <button class="btn mini ghost" data-act="edit" data-id="${p.id}">编辑</button>
+        <button class="btn mini ghost danger" data-act="del" data-id="${p.id}">删除</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAll(){ renderStats(); renderDiffFilter(); renderTagFilter(); renderList(); }
+
+function renderQuickTags(filter=''){
+  const f = filter.trim().toLowerCase();
+  const tags = COMMON_TAGS.filter(t=>t.toLowerCase().includes(f)).slice(0,24);
+  $('quickTags').innerHTML = tags.map(t=>
+    `<span class="tag-chip ${modalTags.has(t)?'active':''}" data-qtag="${esc(t)}">${esc(t)}</span>`).join('');
+}
+function renderSelectedTags(){
+  $('selectedTags').innerHTML = [...modalTags].map(t=>
+    `<span class="sel-tag" data-seltag="${esc(t)}">${esc(t)} ×</span>`).join('');
+}
+
+function openModal(id){
+  editingId = id || null;
+  modalTags = new Set();
+  $('modalTitle').textContent = id ? '编辑题目' : '添加题目';
+  if(id){
+    const p = state.problems.find(x=>String(x.id)===String(id));
+    if(!p) return;
+    $('fName').value = p.name;
+    $('fDiff').value = String(Math.max(0, DIFFS.findIndex(d=>d.name===p.diff)));
+    $('fUrl').value = p.url || '';
+    modalTags = new Set(p.tags||[]);
+  }else{
+    $('fName').value = '';
+    $('fDiff').value = '0';
+    $('fUrl').value = '';
+  }
+  $('fTagInput').value = '';
+  renderQuickTags(); renderSelectedTags();
+  $('modal').classList.add('show');
+  setTimeout(()=>$('fName').focus(), 50);
+}
+function closeModal(){ $('modal').classList.remove('show'); }
+
+async function saveProblem(){
+  if(busy) return;
+  const name = $('fName').value.trim();
+  if(!name){ toast('题目名称不能为空'); $('fName').focus(); return; }
+  const diff = DIFFS[Number($('fDiff').value)].name;
+  const tags = [...modalTags];
+  const url = $('fUrl').value.trim();
+  busyOn(true);
+  try{
+    if(editingId){
+      await api('/api/problems/'+encodeURIComponent(editingId),
+        {method:'PUT', body:JSON.stringify({name, difficulty:diff, tags, url})});
+      toast('已写入数据库');
+    }else{
+      await api('/api/problems',
+        {method:'POST', body:JSON.stringify({name, difficulty:diff, tags, url})});
+      toast('已写入数据库');
+    }
+    await load();
+    closeModal();
+  }catch(e){ toast('保存失败：'+e.message); }
+  finally{ busyOn(false); }
+}
+
+$('addBtn').onclick = ()=>openModal(null);
+$('cancelBtn').onclick = closeModal;
+$('saveBtn').onclick = saveProblem;
+$('modal').onclick = e=>{ if(e.target===$('modal')) closeModal(); };
+
+$('fTagInput').oninput = e=>renderQuickTags(e.target.value);
+$('fTagInput').onkeydown = e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const t = e.target.value.trim().replace(/[,，、]+$/,'');
+    if(t){ modalTags.add(t); e.target.value=''; renderQuickTags(); renderSelectedTags(); }
+  }
+};
+$('quickTags').onclick = e=>{
+  const t = e.target.dataset.qtag; if(!t) return;
+  modalTags.has(t)?modalTags.delete(t):modalTags.add(t);
+  renderQuickTags($('fTagInput').value); renderSelectedTags();
+};
+$('selectedTags').onclick = e=>{
+  const t = e.target.dataset.seltag; if(!t) return;
+  modalTags.delete(t); renderQuickTags($('fTagInput').value); renderSelectedTags();
+};
+$('fName').onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); saveProblem(); } };
+
+$('nameSearch').oninput = e=>{ state.query = e.target.value; renderList(); };
+$('sortSelect').onchange = e=>{ state.sort = e.target.value; renderList(); };
+
+$('diffFilter').onclick = e=>{
+  const item = e.target.closest('[data-diff]'); if(!item) return;
+  state.difficulty = item.dataset.diff;
+  renderDiffFilter(); renderList();
+};
+$('tagFilter').onclick = e=>{
+  const chip = e.target.closest('[data-tag]'); if(!chip) return;
+  const t = chip.dataset.tag;
+  state.tags.includes(t) ? state.tags.splice(state.tags.indexOf(t),1) : state.tags.push(t);
+  renderTagFilter(); renderList();
+};
+document.querySelector('.mode-switch').onclick = e=>{
+  const b = e.target.closest('[data-mode]'); if(!b) return;
+  state.tagMode = b.dataset.mode;
+  document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('active', x===b));
+  renderList();
+};
+$('resetBtn').onclick = ()=>{
+  state.query=''; state.difficulty=''; state.tags=[]; state.tagMode='and';
+  $('nameSearch').value='';
+  document.querySelectorAll('.mode-switch button').forEach((x,i)=>x.classList.toggle('active',i===0));
+  renderAll();
+};
+
+$('list').onclick = async e=>{
+  const tagEl = e.target.closest('[data-tag]');
+  if(tagEl){
+    const t = tagEl.dataset.tag;
+    if(!state.tags.includes(t)) state.tags.push(t);
+    renderTagFilter(); renderList(); return;
+  }
+  const btn = e.target.closest('[data-act]'); if(!btn) return;
+  if(btn.dataset.act==='edit'){ openModal(btn.dataset.id); }
+  if(btn.dataset.act==='del'){
+    const p = state.problems.find(x=>String(x.id)===String(btn.dataset.id));
+    if(p && confirm(`确定从数据库删除「${p.name}」吗？`)){
+      busyOn(true);
+      try{
+        await api('/api/problems/'+encodeURIComponent(p.id), {method:'DELETE'});
+        await load(); toast('已从数据库删除');
+      }catch(e){ toast('删除失败：'+e.message); }
+      finally{ busyOn(false); }
+    }
+  }
+};
+
+$('exportBtn').onclick = async ()=>{
+  busyOn(true);
+  try{
+    const data = await api('/api/export');
+    const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `刷题记录备份_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('已导出 '+data.length+' 道题');
+  }catch(e){ toast('导出失败：'+e.message); }
+  finally{ busyOn(false); }
+};
+$('importBtn').onclick = ()=>$('importFile').click();
+$('importFile').onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = async ()=>{
+    try{
+      const data = JSON.parse(r.result);
+      if(!Array.isArray(data)) throw new Error('格式错误');
+      const valid = data.filter(x=>x && x.name).map(x=>({
+        name:x.name, difficulty:x.difficulty||x.diff||'入门',
+        tags:Array.isArray(x.tags)?x.tags:[], created:x.created||Date.now(), url:x.url||''
+      }));
+      if(!confirm(`将向数据库追加 ${valid.length} 道题，继续吗？`)) return;
+      busyOn(true);
+      const res = await api('/api/import', {method:'POST', body:JSON.stringify({problems:valid})});
+      await load(); toast('已导入 '+res.imported+' 道题');
+    }catch(err){ alert('导入失败：'+err.message); }
+    finally{ busyOn(false); e.target.value=''; }
+  };
+  r.readAsText(f);
+};
+$('clearBtn').onclick = async ()=>{
+  if(!state.problems.length){ toast('当前没有记录'); return; }
+  if(confirm(`确定清空数据库中全部 ${state.problems.length} 道题吗？此操作不可撤销（建议先导出备份）。`)){
+    busyOn(true);
+    try{
+      await api('/api/problems', {method:'DELETE'});
+      await load(); toast('数据库已清空');
+    }catch(e){ toast('清空失败：'+e.message); }
+    finally{ busyOn(false); }
+  }
+};
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+initAppearance(); initSelects(); load();
+</script>
+</body>
+</html>
