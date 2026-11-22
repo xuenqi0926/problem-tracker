@@ -22,6 +22,47 @@
 
 ---
 
+## 前置环境
+
+本系统采用 C/S 架构，数据通过本地 Python 服务读写 SQLite 数据库。**运行前必须装好 Python**，否则一键启动脚本会提示「数据库服务启动失败」。
+
+### 1. Python（必需）
+
+- **版本**：Python 3.8 及以上（推荐 3.10+）
+- **范围**：只用 Python 标准库（`http.server`、`sqlite3` 等），**无需 pip 安装任何第三方包**
+- **检查是否已安装**：打开命令提示符（Win + R → 输入 `cmd` → 回车），执行：
+
+  ```bat
+  python --version
+  ```
+  或
+  ```bat
+  py -3 --version
+  ```
+
+  能显示版本号（如 `Python 3.13.0`）即说明已安装。
+
+- **没有 Python 怎么装**：
+  1. 打开 Python 官网下载页 <https://www.python.org/downloads/windows/>
+  2. 下载最新的 Windows 安装包（Windows installer，64 位选 `Windows installer (64-bit)`）
+  3. 双击安装，**务必勾选 `Add Python to PATH`**（这是最关键的一步，不勾的话命令行找不到 python）
+  4. 点 `Install Now`，等待完成
+  5. 重新打开命令提示符，执行 `python --version` 验证；若提示「不是内部或外部命令」，说明第 3 步没勾选，需重新运行安装包选择 `Modify` 补上，或手动把 Python 安装目录加入系统 PATH
+
+- **启动器兼容性**：一键启动脚本 `启动刷题记录.vbs` 会优先尝试 `py -3`，失败则回退到 `python`，两种方式任选其一可用即可。
+
+### 2. 浏览器（必需）
+
+- 现代浏览器：Chrome / Edge / Firefox 均可（用于访问 `http://127.0.0.1:8765/`）
+
+### 3. 其他说明
+
+- **操作系统**：一键启动脚本为 Windows 设计（`.vbs`）；其他系统可跳过脚本，直接在终端运行 `python server.py`
+- **端口**：默认使用本机 `8765` 端口（仅监听 `127.0.0.1`，不对局域网开放）；若被占用需修改 `server.py` 中的端口配置
+- **无需联网**：除安装 Python 外，日常使用不依赖网络
+
+---
+
 ## 使用方法
 
 ### Windows 一键启动（推荐）
@@ -51,10 +92,7 @@ py -3 server.py
 - **换主题**：右上角 `🎨 外观` → 切深浅模式、选主题风格
 - **备份**：`导出备份` 存成 JSON；换环境后用 `导入` 恢复
 
-### 环境要求
-
-- Windows + Python 3.8 及以上（仅用标准库，无需 pip 安装任何依赖）
-- 现代浏览器（Chrome / Edge / Firefox）
+> 启动前请确认已满足上方「前置环境」中的 Python 与浏览器要求。
 
 ---
 
